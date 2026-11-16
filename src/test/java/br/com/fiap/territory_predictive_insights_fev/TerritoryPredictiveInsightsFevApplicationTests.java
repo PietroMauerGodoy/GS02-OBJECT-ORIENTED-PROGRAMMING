@@ -1,4 +1,4 @@
-package br.com.fiap.territory_predictive_insights_fev;
+package br.com.fiap.territory_predictive_insights_fev.dominio;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
