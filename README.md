@@ -96,22 +96,30 @@ limiares diferentes, e o alerta dependeria de quem a criou. A validação
 
 ## Reflexão crítica
 
-> Meia página, escrita pelo grupo com as próprias palavras.
-
 **Quando o sistema deve se calar?**
-[ESCREVER AQUI. Perguntas-guia: o sistema recusa a previsão com poucas leituras (veja
-`EstrategiaPrevisao.validarHistorico`). Por quê? Quantas leituras você acha suficientes e
-por quê? O que aconteceria se ele previsse com 1 leitura só?]
+Quando tem pouca leitura guardada no banco. No nosso sistema, a previsão se recusa a rodar se
+o histórico for pequeno: a média móvel precisa de pelo menos 3 leituras e a comparação com o
+período anterior precisa de 6 (dois períodos de 3). Com 1 ou 2 leituras, qualquer número seria
+chute, e um alerta falso faz a pessoa perder a confiança no sistema ou mobilizar gente à toa.
+É melhor o sistema dizer "não tenho dados suficientes" do que inventar um valor. Um ponto que
+ainda não resolvemos: se o sensor cair, o sistema continua prevendo em cima de leituras
+antigas, e o ideal seria avisar que a previsão está desatualizada.
 
 **O que os dados não representam?**
-[ESCREVER AQUI. Perguntas-guia: o que um pluviômetro só diz sobre a região inteira? O que
-os valores simulados escondem em relação à realidade? Que fatores fazem alagar e o sistema
-não enxerga?]
+Os valores são sorteados com `Random`, então não têm o comportamento da chuva de verdade, que
+vai aumentando e diminuindo ao longo das horas. Por isso a média e a tendência calculadas aqui
+mostram o funcionamento do sistema, mas não têm sentido físico. Também usamos um sensor de cada
+tipo para a região inteira, e na vida real chove forte num bairro e fica seco no outro. E o
+sistema não enxerga o que faz alagar de verdade: relevo, bueiro entupido, solo já encharcado e
+previsão do tempo. Os limiares (20, 40 e 60 mm/h) são só exemplos.
 
 **Por que o alerta apoia a decisão da pessoa, em vez de decidir por ela?**
-[ESCREVER AQUI. Perguntas-guia: o que pode dar errado se o sistema mobilizasse uma equipe
-ou avisasse moradores sozinho? Quem responde pelo erro? Que informação a pessoa tem que o
-sistema não tem?]
+Porque o alerta pode estar errado. Se o sistema avisasse os moradores ou mobilizasse uma equipe
+sozinho, um alarme falso geraria custo e desgaste, e um erro mais sério ficaria sem ninguém
+responsável. A pessoa que cuida do território sabe coisas que o sistema não sabe: se já está
+chovendo forte agora, se aquela rua costuma alagar, se tem equipe disponível. Por isso cada
+alerta vem com a justificativa (qual sensor, qual valor previsto e qual limite foi passado), pra
+pessoa avaliar e decidir. O próprio menu deixa claro que a ação é do gestor.
 
 ## Testes
 
@@ -123,18 +131,10 @@ sistema não tem?]
 
 ## Uso de IA
 
-[REVISAR E AJUSTAR para refletir o que realmente aconteceu.]
+Usamos o Claude (Anthropic) como assistente durante o projeto. Ele sugeriu a estrutura de
+classes e escreveu os rascunhos do código, dos testes e deste README (inclusive o rascunho da
+reflexão crítica), um passo de cada vez. Também ajudou a resolver erros de configuração do
+IntelliJ e do Maven.
 
-Usamos o Claude (Anthropic) como assistente durante o desenvolvimento: para propor a
-estrutura de classes, gerar rascunhos de código passo a passo e resolver erros de
-configuração do IntelliJ e do Maven. Depois de cada etapa, rodamos o sistema e os testes,
-conferimos o comportamento e estudamos o código antes de seguir. [DESCREVER aqui como o
-grupo revisou e entendeu o código: o que cada um estudou, o que alterou.]
-
-## Divisão de tarefas
-
-| Integrante | Responsabilidade |
-|---|---|
-| Patrick Mansour | [PREENCHER] |
-| Pietro Mauer | [PREENCHER] |
-| Samir Assad | [PREENCHER] |
+A cada etapa, o código foi executado e testado (menu no console, banco e os 13 testes) antes
+de cada commit.
